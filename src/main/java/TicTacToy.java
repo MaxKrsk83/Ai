@@ -1,8 +1,8 @@
 import java.util.Arrays;
 
 public class TicTacToy {
-    public static int SIZE = 10;
-    public static int DOTS_TO_WIN = 3;
+    public static int SIZE = 13;
+    public static int DOTS_TO_WIN = 4;
     public static char[][] map = new char[SIZE][SIZE];
     private static final char DOT_EMPTY = '.';
     private static final char DOT_HUM = 'X';
@@ -30,11 +30,13 @@ public class TicTacToy {
 //        map[0][2] = DOT_HUM;
 //        map[0][0] = DOT_AI;
 //        map[2][5] = DOT_AI;
-//        map[2][4] = DOT_AI;
-        map[4][4] = DOT_AI;
+//        map[4][4] = DOT_AI;
+        map[6][6] = DOT_AI;
+        //map[5][0] = DOT_AI;
 //        map[2][0] = DOT_AI;
 //        map[4][0] = DOT_AI;
-        aiTurn();
+//        aiTurn();
+        int f = findMove(8,8);
         System.out.println("------------------");
         printArr(map);
     }
@@ -69,14 +71,17 @@ public class TicTacToy {
     }
     public static int findMoveН(int x, int y){
         int count = DOTS_TO_WIN;
-        for (int i = -DOTS_TO_WIN + 1; i <DOTS_TO_WIN ; i++) {
-//            if (!(y+i >= 0 & y+i < DOTS_TO_WIN) & !(x+i >= 0 & x+i < DOTS_TO_WIN)){
+        for (int i = -DOTS_TO_WIN +1 ; i <= 0  ; i++) {
+//            if (!(y+i >= 0 & y+i < SIZE)){
 //                continue;
 //            }
-            int tmp = checkH(x,y+i);
-            if (count > tmp & tmp > 0){
-                count = tmp;
-            }
+//            if(i==0){
+//                continue;
+//            }
+//            int tmp = checkH(x   ,y + i);
+//            if (count > tmp & tmp > 0){
+//                count = tmp;
+//            }
 //            tmp = checkV(x+i,y);
 //            if (count > tmp & tmp > 0){
 //                count = tmp;
@@ -85,10 +90,10 @@ public class TicTacToy {
 //            if (count > tmp & tmp > 0){
 //                count = tmp;
 //            }
-//            int tmp = checkD2(x+i,y+i);
-//            if (count > tmp & tmp > 0){
-//                count = tmp;
-//            }
+            int tmp = checkD2(x+i,y+i);
+            if (count > tmp & tmp > 0){
+                count = tmp;
+            }
 
         }
 
@@ -97,10 +102,11 @@ public class TicTacToy {
     public static int checkH(int x, int y){
         int count = 0;
         for (int i = 0; i < DOTS_TO_WIN; i++) {
-            if (y + i < SIZE & y + i >=0){
-                if (map[x][y + i] == DOT_EMPTY){
+            int sumY = y + i;
+            if (sumY < SIZE & sumY >=0){
+                if (map[x][sumY] == DOT_EMPTY){
                     count++;
-                } if (map[x][y + i] == DOT_HUM){
+                } if (map[x][sumY] == DOT_HUM){
                     count = 0;
                     break;
                 }
@@ -114,10 +120,11 @@ public class TicTacToy {
     public static int checkV(int x, int y){
         int count = 0;
         for (int i = 0; i < DOTS_TO_WIN; i++) {
-            if (x + i < SIZE & x + i >=0){
-                if (map[x + i][y] == DOT_EMPTY){
+            int sumX = x + i;
+            if (sumX < SIZE & sumX >=0 ){
+                if (map[sumX][y] == DOT_EMPTY){
                     count++;
-                } if (map[x + i][y] == DOT_HUM){
+                } if (map[sumX][y] == DOT_HUM){
                     count = 0;
                     break;
                 }
@@ -150,7 +157,7 @@ public class TicTacToy {
     public static int checkD2(int x, int y){
         int count = 0;
         for (int i = 0; i < DOTS_TO_WIN; i++) {
-            int sumX = x + i;
+            int sumX = x - i;
             int sumY = y + i;
             if (sumX < SIZE & sumX >=0 & sumY < SIZE & sumY >=0){
                 if (map[sumX][sumY] == DOT_EMPTY){
