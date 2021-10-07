@@ -32,11 +32,11 @@ public class TicTacToy {
 //        map[2][5] = DOT_AI;
 //        map[4][4] = DOT_AI;
         map[6][6] = DOT_AI;
-        //map[5][0] = DOT_AI;
-//        map[2][0] = DOT_AI;
-//        map[4][0] = DOT_AI;
-//        aiTurn();
-        int f = findMove(8,8);
+        map[5][0] = DOT_AI;
+        map[2][0] = DOT_AI;
+        map[4][0] = DOT_AI;
+        aiTurn();
+//        int f = findMove(8,8);
         System.out.println("------------------");
         printArr(map);
     }
@@ -49,88 +49,72 @@ public class TicTacToy {
     }
 
     public static void aiTurn(){
-        int [][] mask = new int[SIZE][SIZE];
-        for (int i = 0; i < SIZE ; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                if(map[i][j] == DOT_EMPTY) {
-                    mask[i][j] = findMove(i, j);
-                }else{
-                    mask[i][j] = 0;
-                }
-            }
-        }
+        int [][] mask = fillMask();
         printArr(mask);
     }
-    public static int findMove(int x, int y){
-        int ret = DOTS_TO_WIN;
-        int tmp = findMoveН(x,y);
-        if (tmp>0 & tmp < ret){
-            ret = tmp;
+    public static int[][] fillMask(){
+        int [][] mask = new int[SIZE][SIZE];
+        for (int x = 0; x < SIZE; x++) {
+            for (int y = 0; y < SIZE; y++) {
+                if(map[x][y]!=DOT_EMPTY){
+                    mask[x][y]=0;
+                }else{
+                    mask[x][y] = check(x,y);
+                }
+            }
         }
-        return ret;
+        return mask;
     }
-    public static int findMoveН(int x, int y){
+    public static int check(int x, int y){
         int count = DOTS_TO_WIN;
-        for (int i = -DOTS_TO_WIN +1 ; i <= 0  ; i++) {
-//            if (!(y+i >= 0 & y+i < SIZE)){
-//                continue;
-//            }
-//            if(i==0){
-//                continue;
-//            }
-//            int tmp = checkH(x   ,y + i);
-//            if (count > tmp & tmp > 0){
-//                count = tmp;
-//            }
-//            tmp = checkV(x+i,y);
-//            if (count > tmp & tmp > 0){
-//                count = tmp;
-//            }
-//            tmp = checkD1(x+i,y+i);
-//            if (count > tmp & tmp > 0){
-//                count = tmp;
-//            }
-            int tmp = checkD2(x+i,y+i);
-            if (count > tmp & tmp > 0){
-                count = tmp;
-            }
-
+        int tmp = checkDir(x,y,1,0);
+        if (tmp<count & tmp>0){
+            count = tmp;
+        }
+        tmp = checkDir(x,y,0,1);
+        if (tmp<count & tmp>0){
+            count = tmp;
+        }
+        tmp = checkDir(x,y,-1,0);
+        if (tmp<count & tmp>0){
+            count = tmp;
+        }
+        tmp = checkDir(x,y,0,-1);
+        if (tmp<count & tmp>0){
+            count = tmp;
+        }
+        tmp = checkDir(x,y,1,1);
+        if (tmp<count & tmp>0){
+            count = tmp;
+        }
+        tmp = checkDir(x,y,-1,1);
+        if (tmp<count & tmp>0){
+            count = tmp;
+        }
+        tmp = checkDir(x,y,-1,-1);
+        if (tmp<count & tmp>0){
+            count = tmp;
+        }
+        tmp = checkDir(x,y,1,-1);
+        if (tmp<count & tmp>0){
+            count = tmp;
         }
 
         return count;
     }
-    public static int checkH(int x, int y){
+    public static int checkDir(int x, int y, int cX, int cY){
         int count = 0;
-        for (int i = 0; i < DOTS_TO_WIN; i++) {
-            int sumY = y + i;
-            if (sumY < SIZE & sumY >=0){
-                if (map[x][sumY] == DOT_EMPTY){
-                    count++;
-                } if (map[x][sumY] == DOT_HUM){
-                    count = 0;
-                    break;
-                }
-            } else{
-                count = 0;
-                break;
+//проверка
+        for (int i = -DOTS_TO_WIN + 1; i < DOTS_TO_WIN; i++) {
+            int sumX = x + i * cX;
+            int sumY = y + i * cY;
+            if (!(sumX < SIZE & sumX >=0) || !(sumY < SIZE & sumY >=0) ){
+                return 0;
             }
-        }
-        return count;
-    }
-    public static int checkV(int x, int y){
-        int count = 0;
-        for (int i = 0; i < DOTS_TO_WIN; i++) {
-            int sumX = x + i;
-            if (sumX < SIZE & sumX >=0 ){
-                if (map[sumX][y] == DOT_EMPTY){
+            if (map[sumX][sumY] == DOT_EMPTY){
                     count++;
-                } if (map[sumX][y] == DOT_HUM){
-                    count = 0;
-                    break;
-                }
-            } else{
-                count = 0;
-                break;
+            } if (map[sumX][sumY] == DOT_HUM){
+                return 0;
             }
         }
         return count;
