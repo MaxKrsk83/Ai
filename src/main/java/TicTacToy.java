@@ -170,28 +170,65 @@ public class TicTacToy {
         ArrayList moveWins = findMoves(wins,minCountToWins);
         ArrayList moveLoose = findMoves(loose,minCountToLoose);
         ArrayList commonMoves = findCommonMoves(moveWins,moveLoose);
-        ArrayList combo = findMoves(wins,2);
-        if (combo.size()>0){
-            pt = getPoint(combo);
-        }else {
-            if(minCountToWins > minCountToLoose) {
-                int sz = commonMoves.size();
-                if (sz > 0 ){
+        ArrayList combo = findMoves(loose,2);
+        if(minCountToWins >= minCountToLoose) {
+            if (minCountToLoose==1){
+                if (commonMoves.size() > 0 ){
                     pt = getPoint(commonMoves);
                 } else {
                     pt = getPoint(moveLoose);
                 }
-            } else {
-                int sz = commonMoves.size();
-                if (sz > 0 ){
-                    pt = getPoint(commonMoves);
-                } else {
-                    pt = getPoint(moveWins);
+            } else{
+                if (combo.size() > 0){
+                    pt = findForNear(combo,getPoint(combo));
+                }else {
+                    pt = getPoint(moveLoose);
                 }
             }
+        } else {
+            if (commonMoves.size() > 0 ){
+                pt = getPoint(commonMoves);
+            } else {
+                pt = getPoint(moveWins);
+            }
         }
-
         map[pt.x][pt.y] = DOT_AI;
+    }
+    public static Point findForNear(ArrayList arr, Point defaultP){
+        Point result;
+        result = defaultP;
+        for (int i = 0; i <arr.size(); i++) {
+            Point p = (Point) arr.get(i);
+            if (p.x + 1 >= SIZE || p.x - 1 < 0 || p.y + 1 >= SIZE || p.y - 1 < 0) {
+                continue;
+            }
+            if (map[p.x + 1][p.y] == DOT_HUM) {
+                result = p;
+                break;
+            } else if (map[p.x][p.y + 1] == DOT_HUM) {
+                result = p;
+                break;
+            } else if (map[p.x - 1][p.y] == DOT_HUM) {
+                result = p;
+                break;
+            } else if (map[p.x][p.y - 1] == DOT_HUM) {
+                result = p;
+                break;
+            } else if (map[p.x + 1][p.y + 1] == DOT_HUM) {
+                result = p;
+                break;
+            } else if (map[p.x + 1][p.y - 1] == DOT_HUM) {
+                result = p;
+                break;
+            } else if (map[p.x - 1][p.y + 1] == DOT_HUM) {
+                result = p;
+                break;
+            } else if (map[p.x - 1][p.y - 1] == DOT_HUM) {
+                result = p;
+                break;
+            }
+        }
+        return result;
     }
     public static ArrayList findCommonMoves(ArrayList arr1, ArrayList arr2){
         ArrayList result = new ArrayList();
